@@ -2,9 +2,9 @@
 
 This is an incomplete document-term matrix python <i>library</i>.
 
-example:
 
-Initialize the model, load the text data into an iterator or a list of lists of strings, and run the build function.
+
+Initialize the model, load the text data (list of lists of strings), and run the build function.
 ```
 from DTM import model, utils
 
@@ -32,14 +32,15 @@ dtm.word_frequencies
 
 
 
-Compare the similarity between any two words in the vocab
+Calculate the similarity between any two words in the vocab:
 ```
 dtm.word_2_word_sim('the', 'with')
 >>> 0.18393539930448133
 ```
 
-Compute the parwise (cosine) similarity for everyword in the vocab.<br>
-This generally requires a lot of memory, so it's reccomended to set the frequency cutoff to cutdown on the output size of the matrix. The tolerance is used to as a filter removing any words pairs with a similarity below the given value
+Compute the parwise (cosine) similarity for all word pairs in the vocab.<br>
+This generally requires a lot of memory, so it's recommended to set the <i>cutoff</i> parameter to filter out words with
+low frequencies to reduce the size of the matrix. Additionally, the <i>tolerance</i> parameter can be used to filter out any words pairs with a similarity below the given value:
 ```
 dtm.calculate_all_word_sims(cutoff=100, tol=0.1)
 
@@ -55,3 +56,6 @@ dtm.calculate_all_word_sims(cutoff=100, tol=0.1)
  ('com', 'ufc', 0.10677272299600572)]
  ...]
 ```
+
+The Document-Term Matrix is a numpy 2D array.
+
