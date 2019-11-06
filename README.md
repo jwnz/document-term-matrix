@@ -38,16 +38,16 @@ Check the word frequencies as follows:
 dtm.word_frequencies
 
 >>> { 'linkin': 1,
- 'park': 29,
- 'in': 199,
- 'the': 455,
- 'end': 6,
- 'it': 162,
- 'starts': 1,
- 'with': 62,
- 'one': 46,
- 'thing': 2, 
- ... }
+      'park': 29,
+      'in': 199,
+      'the': 455,
+      'end': 6,
+      'it': 162,
+      'starts': 1,
+      'with': 62,
+      'one': 46,
+      'thing': 2, 
+      ... }
 ```
 
 
@@ -66,16 +66,16 @@ low frequencies to reduce the size of the matrix. Additionally, the <i>tolerance
 dtm.calculate_all_word_sims(cutoff=100, tol=0.1)
 
 >>> [('com', 'baby', 0.12184896725606949),
- ('com', 'gmail', 0.18702757081485133),
- ('com', 'run', 0.11082707844047872),
- ('com', 'hotmail', 0.32323264425116566),
- ('com', 'hit', 0.16800419993169763),
- ('com', 'mlb', 0.1407256316981406),
- ('com', 'specmade', 0.1224324170635966),
- ('com', 'gun', 0.12785990088125448),
- ('com', 'specspot', 0.11054585572721631),
- ('com', 'ufc', 0.10677272299600572)]
- ...]
+    ('com', 'gmail', 0.18702757081485133),
+    ('com', 'run', 0.11082707844047872),
+    ('com', 'hotmail', 0.32323264425116566),
+    ('com', 'hit', 0.16800419993169763),
+    ('com', 'mlb', 0.1407256316981406),
+    ('com', 'specmade', 0.1224324170635966),
+    ('com', 'gun', 0.12785990088125448),
+    ('com', 'specspot', 0.11054585572721631),
+    ('com', 'ufc', 0.10677272299600572)]
+    ...]
 ```
 
 <br>
@@ -86,6 +86,17 @@ Some more convoluted examples using the DTM 2D numpy array include mapping a wor
 
 ```python
 {dtm.vocab[i]:vec for i,vec in enumerate([dtm.DTM[:, i] for i in range(len(dtm.vocab))])}
+
+>>> {'뱅코우': array([0., 0., 0., ..., 0., 0., 0.]),
+     '뱅크': array([0., 0., 0., ..., 0., 0., 0.]),
+     '뱅킹': array([0., 0., 0., ..., 0., 0., 0.]),
+     '버': array([0., 0., 0., ..., 0., 0., 0.]),
+     '버거': array([0., 0., 0., ..., 0., 0., 0.]),
+     '버거킹': array([0., 0., 0., ..., 0., 0., 0.]),
+     '버건디': array([0., 0., 0., ..., 0., 0., 0.]),
+     '버그': array([0., 0., 0., ..., 0., 0., 0.]),
+     '버그달': array([0., 0., 0., ..., 0., 0., 0.]),
+     '버그만': array([0., 0., 0., ..., 0., 0., 0.])}
 ```
 
 or calculating the augmented frequency tf-idf for each word:
@@ -109,7 +120,7 @@ tfidf
 And perhaps display everything in a neat Pandas DataFrame:
 ```python
 import pandas as pd
-df = pd.DataFrame([{'word':dtm.vocab[i],'tfidf':val} for i,val in enumerate(tfidf)][54245:54255])
+df = pd.DataFrame([{'word':dtm.vocab[i],'tfidf':val} for i,val in enumerate(tfidf)])
 >>> df
 
    word     tfidf
