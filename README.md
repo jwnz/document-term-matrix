@@ -13,6 +13,26 @@ sentences = utils.DocumentIterator('preprocessed_text_data.txt', delim='\t')
 dtm.build(sentences)
 ```
 
+The Document-Term Matrix is a numpy 2D array. The rows represent the documents and the columns represent each individual word in the (sorted) vocab.
+```
+dtm.DTM
+>>> array([[0., 0., 0., ..., 0., 0., 0.],
+           [0., 0., 0., ..., 0., 0., 0.],
+           [0., 0., 0., ..., 0., 0., 0.],
+           ...,
+           [0., 0., 0., ..., 0., 0., 0.],
+           [0., 0., 0., ..., 0., 0., 0.],
+           [0., 0., 0., ..., 0., 0., 0.]])
+
+# first document
+dtm.DTM[0, :]
+>>> array([0., 0., 0., ..., 0., 0., 0.])
+
+# vector representing the first word
+dtm.DTM[:, 0]
+>>> array([0., 0., 0., ..., 0., 0., 0.])
+```
+
 Check the word frequencies as follows:
 ```
 dtm.word_frequencies
@@ -57,5 +77,49 @@ dtm.calculate_all_word_sims(cutoff=100, tol=0.1)
  ...]
 ```
 
-The Document-Term Matrix is a numpy 2D array.
+<br>
+<hr>
+<br>
 
+Some more convoluted examples using the DTM 2D numpy array include mapping a word in the vocab to it's corresponding vector:
+
+```
+{dtm.vocab[i]:vec for i,vec in enumerate([dtm.DTM[:, i] for i in range(len(dtm.vocab))])}
+```
+
+or calculating the augmented frequency tf-idf for each word:
+```
+import numpy as np
+
+# calculate augmented frequency
+max_freq = sorted(dtm.word_frequencies.items(), key=lambda x: x[1], reverse=True)[0][1]
+tf = 0.5 + (0.5*( np.sum(dtm.DTM,axis=0)/max_freq ))
+
+# calculate the inverse document frequency
+idf = np.log(dtm.DTM.shape[0]/np.sum(dtm.DTM>0, axis=0))
+
+# multiply tf by idf to calculate the tf-idf
+tfidf = tf*idf
+
+tfidf
+>>> array([5.1547438 , 5.1547438 , 5.1547438 , ..., 4.18347412, 4.35088595, 5.15554622])
+```
+
+And perhaps display everything in a neat Pandas DataFrame:
+```
+import pandas as pd
+df = pd.DataFrame([{'word':dtm.vocab[i],'tfidf':val} for i,val in enumerate(tfidf)][54245:54255])
+>>> df
+
+   word     tfidf
+0  뱅코우  5.154744
+1   뱅크  3.366917
+2   뱅킹  4.058600
+3    버  3.914662
+4   버거  3.639000
+5  버거킹  5.155011
+6  버건디  4.462255
+7   버그  3.428355
+8  버그달  5.154744
+9  버그만  5.154744
+```
