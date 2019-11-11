@@ -6,9 +6,9 @@ This is an incomplete document-term matrix python <i>library</i>.
 
 Initialize the model, load the text data (list of lists of strings), and run the build function.
 ```python
-from DTM import model, utils
+from document_term_matrix import DocumentTermMatrix, utils
 
-dtm = model.DTM()
+dtm = DocumentTermMatrix.DocumentTermMatrix()
 sentences = utils.DocumentIterator('preprocessed_text_data.txt', delim='\t')
 dtm.build(sentences)
 ```
@@ -82,7 +82,7 @@ dtm.calculate_all_word_sims(cutoff=100, tol=0.1)
 <hr>
 <br>
 
-Some more convoluted examples using the DTM 2D numpy array include mapping a word in the vocab to it's corresponding vector:
+Some more convoluted examples using the 2D numpy array include mapping a word in the vocab to it's corresponding vector:
 
 ```python
 {dtm.vocab[i]:vec for i,vec in enumerate([dtm.DTM[:, i] for i in range(len(dtm.vocab))])}

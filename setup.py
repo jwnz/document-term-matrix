@@ -2,9 +2,9 @@ from setuptools import setup
 
 setup(
     author='Teryn Jones',
-    name='DTM',
+    name='document_term_matrix',
     version=0.1,
-    url='https://github.com/DTM',
+    url='https://github.com/document-term-matrix',
     license='MIT',
     install_requires=['numpy',],
-    packages=['DTM'])
+    packages=['document_term_matrix'])
