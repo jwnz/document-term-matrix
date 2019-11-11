@@ -1,4 +1,4 @@
-### DTM
+### Document-term-matrix
 
 This is an incomplete document-term matrix python <i>library</i>.
 
