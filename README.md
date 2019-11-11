@@ -103,9 +103,11 @@ or calculating the augmented frequency tf-idf for each word:
 ```python
 import numpy as np
 
-# calculate augmented frequency
-max_freq = sorted(dtm.word_frequencies.items(), key=lambda x: x[1], reverse=True)[0][1]
-tf = 0.5 + (0.5*( np.sum(dtm.DTM,axis=0)/max_freq ))
+# working with the 4th document
+n = 4
+
+# calculate term frequency
+tf = dtm.DTM[n, :]/dtm.DTM[n, :].sum()
 
 # calculate the inverse document frequency
 idf = np.log(dtm.DTM.shape[0]/np.sum(dtm.DTM>0, axis=0))
@@ -120,18 +122,18 @@ tfidf
 And perhaps display everything in a neat Pandas DataFrame:
 ```python
 import pandas as pd
-df = pd.DataFrame([{'word':dtm.vocab[i],'tfidf':val} for i,val in enumerate(tfidf)])
+df = pd.DataFrame([{'docnum':n, 'word':dtm.vocab[i],'tfidf':val} for i,val in enumerate(tfidf)])
 >>> df
 
-   word     tfidf
-0  뱅코우  5.154744
-1   뱅크  3.366917
-2   뱅킹  4.058600
-3    버  3.914662
-4   버거  3.639000
-5  버거킹  5.155011
-6  버건디  4.462255
-7   버그  3.428355
-8  버그달  5.154744
-9  버그만  5.154744
+   docnum   word     tfidf
+0    4      뱅코우   5.154744
+1    4       뱅크    3.366917
+2    4       뱅킹    4.058600
+3    4        버     3.914662
+4    4       버거    3.639000
+5    4      버거킹   5.155011
+6    4      버건디   4.462255
+7    4       버그    3.428355
+8    4      버그달   5.154744
+9    4      버그만   5.154744
 ```
