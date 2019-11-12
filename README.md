@@ -6,7 +6,8 @@ This is an incomplete document-term matrix python <i>library</i>. As this is cur
 
 Initialize the model, load the text data (list of lists of strings), and run the build function.
 ```python
-from document_term_matrix import DocumentTermMatrix, utils
+from document_term_matrix.DocumentTermMatrix import DocumentTermMatrix
+from document_term_matrix import utils
 
 dtm = DocumentTermMatrix.DocumentTermMatrix()
 sentences = utils.DocumentIterator('preprocessed_text_data.txt', delim='\t')
