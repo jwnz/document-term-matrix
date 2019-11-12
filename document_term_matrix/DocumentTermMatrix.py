@@ -8,7 +8,7 @@ import numpy as np
 import sys
 
 class DocumentTermMatrix():
-    def __init__(self):
+    def __init__(self, tf=None, idf=None, norm_k=0.5):
         '''
         '''
         self.vocab = None
@@ -18,7 +18,9 @@ class DocumentTermMatrix():
         # hidden variables
         self._vocab_idx_map = dict()
         self._doc_count = 0
-
+        self._tf = tf
+        self._idf = idf
+        self._norm_k = norm_k
 
     def build(self, sentences):
         self._build_vocab(sentences)
@@ -42,6 +44,48 @@ class DocumentTermMatrix():
         self._vocab_idx_map = {w:ix for ix,w in enumerate(self.vocab)}
 
 
+    def _calculate_tf(self, docs):
+        '''
+        '''
+        if self._tf == 'count':
+            pass
+
+        if self._tf == 'binary':
+            docs[x>0]=1
+
+        if self._tf == 'freq':
+            pass
+            # func = lambda x: np.divide(x,np.sum(x))
+            # docs = np.apply_along_axis(func, 1, docs)
+
+        if self._tf == 'lognorm':
+            func = lambda x: np.log(1 + x)
+            docs = np.apply_along_axis(func, 1, docs)
+
+        if self._tf == 'doublenormhalf':
+            # func = lambda x: 0.5 + (0.5 * (x/x.max()))
+            # docs = np.apply_along_axis(func, 1, docs)
+            pass
+
+        if self._tf == 'doublenormk':
+            # func = lambda x: self._norm_k + (self._norm_k * (x/x.max()))
+            # docs = np.apply_along_axis(func, 1, docs)
+            pass
+
+        return docs
+
+
+    def _calculate_idf(self, docs):
+        '''
+        '''
+        if self._idf == 'idf':
+            docs.shape[0]/np.sum(docs>0, axis=0)
+            func = lambda x: np.log(docs.shape[0]/np.count_nonzero(x[x>0]))
+            docs = np.apply_along_axis(func, 0, docs)
+
+
+        return docs
+
     def _build_DTM(self, sentences):
         '''Build the Term-Document matrix'''
         docs = np.zeros((self._doc_count,len(self.vocab)))
@@ -52,11 +96,12 @@ class DocumentTermMatrix():
                 ix = self._vocab_idx_map[token]
                 docs[doc_count, ix] = tokens.count(token)
 
-        return docs
+        if self._tf is not None:
+            docs = self._calculate_tf(docs)
+        if self._idf is not None:
+            docs *= self._calculate_idf(docs)
 
-    def tf_df(self, tf_method='raw', idf='idf'):
-        # TODO: finish this function
-        pass
+        return docs
 
     def word_2_word_sim(self, w1, w2):
         '''
@@ -79,6 +124,7 @@ class DocumentTermMatrix():
         w2_vec = self.DTM[:, w2_i]
         sim = utils.cosine_sim(w1_vec, w2_vec)
         return sim
+
 
 
     def calculate_all_word_sims(self, cutoff=10, tol=0.0):

@@ -1,6 +1,6 @@
 ### Document-term-matrix
 
-This is an incomplete document-term matrix python <i>library</i>.
+This is an incomplete document-term matrix python <i>library</i>. As this is currently a work in progress, things may change quickly.
 
 
 
