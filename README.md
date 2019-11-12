@@ -9,7 +9,7 @@ Initialize the model, load the text data (list of lists of strings), and run the
 from document_term_matrix.DocumentTermMatrix import DocumentTermMatrix
 from document_term_matrix import utils
 
-dtm = DocumentTermMatrix.DocumentTermMatrix()
+dtm = DocumentTermMatrix()
 sentences = utils.DocumentIterator('preprocessed_text_data.txt', delim='\t')
 dtm.build(sentences)
 ```
