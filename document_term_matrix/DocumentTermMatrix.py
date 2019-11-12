@@ -54,23 +54,20 @@ class DocumentTermMatrix():
             docs[x>0]=1
 
         if self._tf == 'freq':
-            pass
-            # func = lambda x: np.divide(x,np.sum(x))
-            # docs = np.apply_along_axis(func, 1, docs)
+            func = lambda x: x/np.sum(x)
+            docs = np.apply_along_axis(func, 1, docs)
 
         if self._tf == 'lognorm':
             func = lambda x: np.log(1 + x)
             docs = np.apply_along_axis(func, 1, docs)
 
         if self._tf == 'doublenormhalf':
-            # func = lambda x: 0.5 + (0.5 * (x/x.max()))
-            # docs = np.apply_along_axis(func, 1, docs)
-            pass
+            func = lambda x: 0.5 + (0.5 * (x/x.max()))
+            docs = np.apply_along_axis(func, 1, docs)
 
         if self._tf == 'doublenormk':
-            # func = lambda x: self._norm_k + (self._norm_k * (x/x.max()))
-            # docs = np.apply_along_axis(func, 1, docs)
-            pass
+            func = lambda x: self._norm_k + (self._norm_k * (x/x.max()))
+            docs = np.apply_along_axis(func, 1, docs)
 
         return docs
 
@@ -79,10 +76,17 @@ class DocumentTermMatrix():
         '''
         '''
         if self._idf == 'idf':
-            docs.shape[0]/np.sum(docs>0, axis=0)
             func = lambda x: np.log(docs.shape[0]/np.count_nonzero(x[x>0]))
             docs = np.apply_along_axis(func, 0, docs)
 
+        if self._idf == 'smooth':
+            pass
+
+        if self._idf == 'max':
+            pass
+
+        if self._idf == 'probabilistic':
+            pass
 
         return docs
 
