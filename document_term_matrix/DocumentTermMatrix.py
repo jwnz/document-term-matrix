@@ -44,9 +44,12 @@ class DocumentTermMatrix():
         self._vocab_idx_map = {w:ix for ix,w in enumerate(self.vocab)}
 
 
-    def _calculate_tf(self, docs):
+    def _calculate_tf(self, docs, func=None):
         '''
         '''
+        if func is not None:
+            docs = np.apply_along_axis(func, 0, docs)
+
         if self._tf == 'count':
             pass
 
@@ -72,21 +75,28 @@ class DocumentTermMatrix():
         return docs
 
 
-    def _calculate_idf(self, docs):
+    def _calculate_idf(self, docs, func=None):
         '''
         '''
+        if func is not None:
+            docs = np.apply_along_axis(func, 0, docs)
+
         if self._idf == 'idf':
             func = lambda x: np.log(docs.shape[0]/np.count_nonzero(x[x>0]))
             docs = np.apply_along_axis(func, 0, docs)
 
         if self._idf == 'smooth':
-            pass
+            func = lambda x: np.log(docs.shape[0]/(1+np.count_nonzero(x[x>0])))+1
+            docs = np.apply_along_axis(func, 0, docs)
 
         if self._idf == 'max':
-            pass
+            func = lambda x: np.log( x.max()/(1+np.count_nonzero(x[x>0])) )
+            docs = np.apply_along_axis(func, 0, docs)
 
         if self._idf == 'probabilistic':
-            pass
+            func = lambda x: log( (docs.shape[0]-np.count_nonzero(x[x>0])/np.count_nonzero(x[x>0])) )
+            docs = np.apply_along_axis(func, 0, docs)
+
 
         return docs
 
