@@ -8,7 +8,7 @@ import numpy as np
 import sys
 
 class DocumentTermMatrix():
-    def __init__(self, tf=None, idf=None, norm_k=0.5):
+    def __init__(self, tf=None, idf=None, norm_k=0.5, tf_func=None, idf_func=None):
         '''
         '''
         self.vocab = None
@@ -21,6 +21,8 @@ class DocumentTermMatrix():
         self._tf = tf
         self._idf = idf
         self._norm_k = norm_k
+        self._tf_func = tf_func
+        self._idf_func = idf_func
 
     def build(self, sentences):
         self._build_vocab(sentences)
@@ -110,10 +112,11 @@ class DocumentTermMatrix():
                 ix = self._vocab_idx_map[token]
                 docs[doc_count, ix] = tokens.count(token)
 
-        if self._tf is not None:
-            docs = self._calculate_tf(docs)
-        if self._idf is not None:
-            docs *= self._calculate_idf(docs)
+        if self._tf is not None or self._tf_func is not None:
+            docs = self._calculate_tf(docs, func=self._tf_func)
+            
+        if self._idf is not None or self._idf_func is not None:
+            docs *= self._calculate_idf(docs, func=self._idf_func)
 
         return docs
 

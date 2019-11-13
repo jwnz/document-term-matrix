@@ -53,7 +53,7 @@ dtm.word_frequencies
 
 
 
-Calculate the similarity between any two words in the vocab:
+Calculate the cosine similarity between any two words in the vocab:
 ```python
 dtm.word_2_word_sim('the', 'with')
 >>> 0.18393539930448133
@@ -83,58 +83,10 @@ dtm.calculate_all_word_sims(cutoff=100, tol=0.1)
 <hr>
 <br>
 
-Some more convoluted examples using the 2D numpy array include mapping a word in the vocab to it's corresponding vector:
+### TF-IDF
+The library also has supoprt for basic term frequency and inverse document frequency functionality.
 
-```python
-{dtm.vocab[i]:vec for i,vec in enumerate([dtm.DTM[:, i] for i in range(len(dtm.vocab))])}
 
->>> {'뱅코우': array([0., 0., 0., ..., 0., 0., 0.]),
-     '뱅크': array([0., 0., 0., ..., 0., 0., 0.]),
-     '뱅킹': array([0., 0., 0., ..., 0., 0., 0.]),
-     '버': array([0., 0., 0., ..., 0., 0., 0.]),
-     '버거': array([0., 0., 0., ..., 0., 0., 0.]),
-     '버거킹': array([0., 0., 0., ..., 0., 0., 0.]),
-     '버건디': array([0., 0., 0., ..., 0., 0., 0.]),
-     '버그': array([0., 0., 0., ..., 0., 0., 0.]),
-     '버그달': array([0., 0., 0., ..., 0., 0., 0.]),
-     '버그만': array([0., 0., 0., ..., 0., 0., 0.])}
 ```
 
-or calculating the augmented frequency tf-idf for each word:
-```python
-import numpy as np
-
-# working with the 4th document
-n = 4
-
-# calculate term frequency
-tf = dtm.DTM[n, :]/dtm.DTM[n, :].sum()
-
-# calculate the inverse document frequency
-idf = np.log(dtm.DTM.shape[0]/np.sum(dtm.DTM>0, axis=0))
-
-# multiply tf by idf to calculate the tf-idf
-tfidf = tf*idf
-
-tfidf
->>> array([5.1547438 , 5.1547438 , 5.1547438 , ..., 4.18347412, 4.35088595, 5.15554622])
-```
-
-And perhaps display everything in a neat Pandas DataFrame:
-```python
-import pandas as pd
-df = pd.DataFrame([{'docnum':n, 'word':dtm.vocab[i],'tfidf':val} for i,val in enumerate(tfidf)])
->>> df
-
-   docnum   word     tfidf
-0    4      뱅코우   5.154744
-1    4       뱅크    3.366917
-2    4       뱅킹    4.058600
-3    4        버     3.914662
-4    4       버거    3.639000
-5    4      버거킹   5.155011
-6    4      버건디   4.462255
-7    4       버그    3.428355
-8    4      버그달   5.154744
-9    4      버그만   5.154744
 ```
