@@ -86,7 +86,38 @@ dtm.calculate_all_word_sims(cutoff=100, tol=0.1)
 ### TF-IDF
 The library also has supoprt for basic term frequency and inverse document frequency functionality.
 
+Initialize the `DocumentTermMatrix` obejct as usual. Then run the `build` function to generate the document-term matrix given the specified tf and idf functions.
 
+```python
+import document_term_matrix.DocumentTermMatrix as DTM
+dtm = dtm.DocumentTermMatrix(tf='freq', idf='idf')
+dtm.build(sentences)
 ```
 
+In the case of using the <i>double normalization K</i> term frequency function, the `norm_k` parameter should also be set. The default value is `0.5`.
+
+```python
+dtm = dtm.DocumentTermMatrix(tf='doublenormk', idf='idf', norm_k=0.2)
+```
+
+The included term frequency and inverse document frequency functions are as follows:
+| TF             |          | IDF           |          |
+|----------------|----------|---------------|----------|
+| Key            | Function | Key           | Function |
+| count          |          | idf           |          |
+| binary         |          | smooth        |          |
+| freq           |          | max           |          |
+| lognorm        |          | probabilistic |          |
+| doublenormhalf |          |               |          |
+| doublenormk    |          |               |          |
+
+
+Users may specify a specific function for the term frequency or inverse document frequency as well. The function will be executed on the term-document matrix using the numpy function `apply_along_axis(func, 1, dtm)` and `apply_along_axis(func, 0, dtm)` respectively.
+
+```python
+# example of weighting scheme 2 from the wikipedia article
+tf = lambda x: 1+np.log(x)
+idf = lambda x: np.log(1+(dtm.DTM.shape[0]/np.count_nonzero(x[x>0])))
+
+dtm = dtm.DocumentTermMatrix(tf_func=tf, idf_func=idf)
 ```
