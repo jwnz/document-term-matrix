@@ -101,6 +101,7 @@ dtm = dtm.DocumentTermMatrix(tf='doublenormk', idf='idf', norm_k=0.2)
 ```
 
 The included term frequency and inverse document frequency functions are as follows:
+
 | TF             |          | IDF           |          |
 |----------------|----------|---------------|----------|
 | Key            | Function | Key           | Function |
