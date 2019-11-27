@@ -46,7 +46,7 @@ class DocumentTermMatrix():
                     self.word_frequencies[token] = 1
 
         if self.top_n is not None:
-            self.word_frequencies = {w:f for w,f in sorted(self.word_frequencies.items(), key=lambda x:x[1], reverse=True)[:100] if f>=self.freq_cutoff}
+            self.word_frequencies = {w:f for w,f in sorted(self.word_frequencies.items(), key=lambda x:x[1], reverse=True)[:top_n] if f>=self.freq_cutoff}
 
 
         self.vocab = sorted(self.word_frequencies.keys())
