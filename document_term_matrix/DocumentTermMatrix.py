@@ -8,12 +8,14 @@ import numpy as np
 import sys
 
 class DocumentTermMatrix():
-    def __init__(self, tf=None, idf=None, norm_k=0.5, tf_func=None, idf_func=None):
+    def __init__(self, tf=None, idf=None, norm_k=0.5, tf_func=None, idf_func=None, freq_cutoff=0, top_n=None):
         '''
         '''
         self.vocab = None
         self.DTM = None
         self.word_frequencies = dict()
+        self.freq_cutoff = freq_cutoff
+        self.top_n = top_n
 
         # hidden variables
         self._vocab_idx_map = dict()
@@ -37,12 +39,17 @@ class DocumentTermMatrix():
             self._doc_count += 1
 
             for token in tokens:
-                vocab.add(token)
-                if token not in self.word_frequencies:
-                    self.word_frequencies[token] = 0
-                self.word_frequencies[token] += 1
+                # vocab.add(token)
+                try:
+                    self.word_frequencies[token] += 1
+                except:
+                    self.word_frequencies[token] = 1
 
-        self.vocab = sorted(vocab)
+        if self.top_n is not None:
+            self.word_frequencies = {w:f for w,f in sorted(self.word_frequencies.items(), key=lambda x:x[1], reverse=True)[:100] if f>=self.freq_cutoff}
+
+
+        self.vocab = sorted(self.word_frequencies.keys())
         self._vocab_idx_map = {w:ix for ix,w in enumerate(self.vocab)}
 
 
@@ -109,8 +116,11 @@ class DocumentTermMatrix():
         for doc_count, tokens in enumerate(sentences):
 
             for token in tokens:
-                ix = self._vocab_idx_map[token]
-                docs[doc_count, ix] = tokens.count(token)
+                try:
+                    ix = self._vocab_idx_map[token]
+                    docs[doc_count, ix] = tokens.count(token)
+                except:
+                    pass # skipping non existent words
 
         if self._tf is not None or self._tf_func is not None:
             docs = self._calculate_tf(docs, func=self._tf_func)
