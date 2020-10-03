@@ -1,8 +1,6 @@
 ### Document-term-matrix
 
-This is an incomplete document-term matrix python <i>library</i>.
-
-
+This is a document-term matrix python library for small tasks that fit in memory.
 
 Initialize the model, load the text data (list of lists of strings), and run the build function.
 ```python
@@ -61,7 +59,7 @@ dtm.word_2_word_sim('the', 'with')
 
 Compute the parwise (cosine) similarity for all word pairs in the vocab.<br>
 This generally requires a lot of memory, so it's recommended to set the <i>cutoff</i> parameter to filter out words with
-low frequencies to reduce the size of the matrix. Additionally, the <i>tolerance</i> parameter can be used to filter out any words pairs with a similarity below the given value:
+low frequencies to reduce the size of the matrix. Additionally, the <i>tolerance</i> parameter can be used to filter out any words pairs with a similarity below the given value. <small>(Note: The values returned are not from the upper- or lower-triangles, and as such there will be duplicate, flipped similarities in the result set).</small>
 
 ```python
 dtm.calculate_all_word_sims(cutoff=100, tol=0.1)
@@ -84,7 +82,7 @@ dtm.calculate_all_word_sims(cutoff=100, tol=0.1)
 <br>
 
 ### TF-IDF
-The library also has supoprt for basic term frequency and inverse document frequency functionality.
+The library also has supoprt for term frequency and inverse document frequency functionality.
 
 Initialize the `DocumentTermMatrix` obejct as usual. Then run the `build` function to generate the document-term matrix given the specified tf and idf functions.
 
@@ -105,15 +103,15 @@ The included term frequency and inverse document frequency functions are as foll
 | TF             |          | IDF           |          |
 |----------------|----------|---------------|----------|
 | Key            | Function | Key           | Function |
-| count          |          | idf           |          |
-| binary         |          | smooth        |          |
-| freq           |          | max           |          |
-| lognorm        |          | probabilistic |          |
-| doublenormhalf |          |               |          |
-| doublenormk    |          |               |          |
+| count          | ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/69faba5875c1ba7d6a3820c813ba22fba35185f5)        | idf           | ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/864fcfdc0c16344c11509f724f1aa7081cf9f657)         |
+| binary         | ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/a019735e07635e5a74673d6e1a34919027e645f5)        | smooth        | ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/25f4d6690acaaef1f15f308d24f6f8a439de971d)         |
+| freq           | ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/91699003abf4fe8bdf861bbce08e73e71acf5fd4)        | max           | ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/f15c125a1d7f1327afeecc4e2b89272a9a094338)         |
+| lognorm        | ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/9c173382612c58c00325c4e9f593739ab3afc324)        | probabilistic | ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/1868194cba8431aa2d556dd1aac90d78833eaaf3)         |
+| doublenormhalf | ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/45badc1c70ec2caa00ed8c21ed75bd9f8d3e650c)        |               |          |
+| doublenormk    | ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/65b776d7a3f8e42f15c880fb7582282b987684fe)        |               |          |
 
 
-Users may specify a specific function for the term frequency or inverse document frequency as well. The function will be executed on the term-document matrix using the numpy function `apply_along_axis(func, 1, dtm)` and `apply_along_axis(func, 0, dtm)` respectively.
+Users may specify a specific function for the term frequency or inverse document frequency as well. The function will be executed on the term-document matrix using the numpy functions `apply_along_axis(func, 1, dtm)` and `apply_along_axis(func, 0, dtm)` respectively.
 
 ```python
 # example of weighting scheme 2 from the wikipedia article
